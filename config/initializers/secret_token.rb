@@ -26,5 +26,5 @@ end
 
 SampleApp::Application.config.secret_key_base = secure_token
 
-## TMJ, Rails original. ##
+## User note: Rails original. ##
 # SampleApp::Application.config.secret_key_base = '00e30db430e7d9d847df1378af5bbc6acaf7c5225220e351092baf854f6f2c529df7c6ad1563b9505a358f70af51c9bd271559701bf569fe971f1c07b81e6e91'

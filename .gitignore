@@ -16,7 +16,7 @@
 /tmp
 
 
-## TMJ, added per tut. ##
+## User note: added per tut. ##
 # Ignore other unneeded files.
 .ssh/
 database.yml

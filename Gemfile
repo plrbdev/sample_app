@@ -31,7 +31,7 @@ group :production do
 end
 
 
-## TMJ, Rails original. ##
+## User note: Rails original. ##
 
 # source 'https://rubygems.org'
 

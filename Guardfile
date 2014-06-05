@@ -14,7 +14,6 @@ guard 'spork', :cucumber_env => { 'RAILS_ENV' => 'test' },
 
 end
 
-
 guard 'rspec', all_after_pass: false, cli: '--drb' do
 
   # HACK, ???
@@ -39,7 +38,7 @@ guard 'rspec', all_after_pass: false, cli: '--drb' do
 
   # END
 
-
+  ## ... ##
   watch('config/routes.rb')
   # Custom Rails Tutorial specs
   watch(%r{^app/controllers/(.+)_(controller)\.rb$}) do |m|
@@ -49,10 +48,24 @@ guard 'rspec', all_after_pass: false, cli: '--drb' do
      (m[1][/_pages/] ? "spec/requests/#{m[1]}_spec.rb" :
                        "spec/requests/#{m[1].singularize}_pages_spec.rb")]
   end
+
+  ## HACK, layouts.##
+  # # Original.
+  # watch(%r{^app/views/(.+)/}) do |m|
+  #   (m[1][/_pages/] ? "spec/requests/#{m[1]}_spec.rb" :
+  #                     "spec/requests/#{m[1].singularize}_pages_spec.rb")
+  # end
+
+  ## TODO, get this sh*t to notify/fail within the context of guard instead of abort. ##
   watch(%r{^app/views/(.+)/}) do |m|
-    (m[1][/_pages/] ? "spec/requests/#{m[1]}_spec.rb" :
-                      "spec/requests/#{m[1].singularize}_pages_spec.rb")
+    spec_file = m[1][/_pages/] ? "spec/requests/#{m[1]}_spec.rb" : "spec/requests/#{m[1].singularize}_pages_spec.rb"
+
+    File.exists?(spec_file) or abort "ERROR: file '#{spec_file}' does not exist."
+    spec_file
   end
+
+  ## END ##
+
   watch(%r{^app/controllers/sessions_controller\.rb$}) do |m|
     "spec/requests/authentication_pages_spec.rb"
   end
@@ -109,14 +122,14 @@ end
 # end
 
 
-guard 'spork', :cucumber_env => { 'RAILS_ENV' => 'test' }, :rspec_env => { 'RAILS_ENV' => 'test' } do
-  watch('config/application.rb')
-  watch('config/environment.rb')
-  watch('config/environments/test.rb')
-  watch(%r{^config/initializers/.+\.rb$})
-  watch('Gemfile')
-  watch('Gemfile.lock')
-  watch('spec/spec_helper.rb') { :rspec }
-  watch('test/test_helper.rb') { :test_unit }
-  watch(%r{features/support/}) { :cucumber }
-end
+# guard 'spork', :cucumber_env => { 'RAILS_ENV' => 'test' }, :rspec_env => { 'RAILS_ENV' => 'test' } do
+#   watch('config/application.rb')
+#   watch('config/environment.rb')
+#   watch('config/environments/test.rb')
+#   watch(%r{^config/initializers/.+\.rb$})
+#   watch('Gemfile')
+#   watch('Gemfile.lock')
+#   watch('spec/spec_helper.rb') { :rspec }
+#   watch('test/test_helper.rb') { :test_unit }
+#   watch(%r{features/support/}) { :cucumber }
+# end

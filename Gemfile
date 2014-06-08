@@ -26,8 +26,8 @@ group :test do
   gem 'libnotify', '0.8.0'
 
   # # Optional, playing around.
-  # gem 'cucumber-rails', '1.4.0', :require => false
-  # gem 'database_cleaner', github: 'bmabey/database_cleaner'
+  gem 'cucumber-rails', '1.4.0', :require => false
+  gem 'database_cleaner', github: 'bmabey/database_cleaner'
 end
 
 gem 'sass-rails', '4.0.1'

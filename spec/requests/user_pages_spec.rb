@@ -28,41 +28,6 @@ describe "User pages" do
       end
     end
 
-    # ## DEBUG, WIP. ##
-    # describe "as admin user" do
-    #   let(:admin) { FactoryGirl.create(:admin) }
-    #   before { sign_in admin }
-
-    #   describe "should not be able to delete himself by submitting a DELETE request to the Users#destroy action" do
-    #     specify do
-    #       expect { delete user_path(admin) }.not_to change(User, :count).by(-1)
-    #     end
-    #   end
-    # end
-
-    # describe "destroy" do
-    #   let!(:admin) { FactoryGirl.create(:admin) }
-
-    #   before do
-    #     sign_in admin
-    #   end
-
-    #   it "should delete a normal user" do
-    #     user = FactoryGirl.create(:user)
-    #     expect { delete user_path(user), {},
-    #       'HTTP_COOKIE' => "remember_token=#{admin.remember_token},
-    #           #{Capybara.current_session.driver.response.headers["Set-Cookie"]}" }.
-    #     to change(User, :count).by(-1)
-    #   end
-
-    #   it "should not allow the admin to delete herself" do
-    #     expect { delete user_path(admin), {},
-    #       'HTTP_COOKIE' => "remember_token=#{admin.remember_token},
-    #           #{Capybara.current_session.driver.response.headers["Set-Cookie"]}" }.
-    #     to_not change(User, :count)
-    #   end
-    # end
-
     describe "delete links" do
 
       it { should_not have_link('delete') }
@@ -82,143 +47,38 @@ describe "User pages" do
         end
         it { should_not have_link('delete', href: user_path(admin)) }
 
-        # ## DEBUG, WIP. ##
-        # describe "destroy" do
-        #   let!(:admin) { FactoryGirl.create(:admin) }
-
-        #   before do
-        #     sign_in admin
-        #   end
-
-        #   it "should delete a normal user" do
-        #     user = FactoryGirl.create(:user)
-        #     expect { delete user_path(user), {},
-        #       'HTTP_COOKIE' => "remember_token=#{admin.remember_token},
-        #       #{Capybara.current_session.driver.response.headers["Set-Cookie"]}" }.
-        #     to change(User, :count).by(-1)
-        #   end
-
-        #   it "should not allow the admin to delete herself" do
-        #     expect { delete user_path(admin), {},
-        #       'HTTP_COOKIE' => "remember_token=#{admin.remember_token},
-        #       #{Capybara.current_session.driver.response.headers["Set-Cookie"]}" }.
-        #     to_not change(User, :count)
-        #   end
-        # end
-
-        # describe "should NOT be able to delete an admin user" do
-        #   let(:user) { FactoryGirl.create(:user) }
-
-        # it "should not allow the admin to delete herself" do
-        #   expect { delete user_path(admin), {},
-        #     'HTTP_COOKIE' => "remember_token=#{admin.remember_token},
-        #     #{Capybara.current_session.driver.response.headers["Set-Cookie"]}" }.
-        #   to_not change(User, :count)
-        # end
-
-        # it "should NOT be able to delete an admin user" do
-        #   puts "\nDEBUG, manual, '#{__FILE__}': user count, prior> '#{User.count}'."
-
-        #   delete user_path(user)
-        #   expect { User.count }.to change(User, :count).by(-1)
-
-        #   puts "\nDEBUG, manual, '#{__FILE__}': user count> '#{User.count}'."
-        # end
-
-        # describe "can't delete self by submitting DELETE request to Users#destroy" do
-        #   before { delete user_path(admin) }
-        #   specify { response.should redirect_to(users_path), 
-        #     flash[:error].should =~ /Can not delete own admin account!/i }
-        # end
-        
-        # it "should not be able to delete itself" do
-        #   expect { delete user_path(admin)  }.not_to change(User, :count) 
-        # end
-
-        # describe "deleting herself" do
-        #   it "should not be possible" do
-        #     expect { 
-        #       puts "\nDEBUG, manual, '#{__FILE__}': user count, prior> '#{User.count}'."
-        #       delete user_path(user) 
-        #       puts "\nDEBUG, manual, '#{__FILE__}': user count> '#{User.count}'."
-            
-        #     }.to_not change(User, :count)
-        #     puts "\nDEBUG, manual, '#{__FILE__}': user count> '#{User.count}'."
-        #   end
-        # end
-
-        # describe "should not be able to delete himself by submitting a DELETE request to the Users#destroy action" do
-        #   specify do
-        #     puts "\nDEBUG, manual, '#{__FILE__}': user count, prior> '#{User.count}'."
-        #     expect { delete user_path(admin) }.not_to change(User, :count).by(-1)
-        #     puts "\nDEBUG, manual, '#{__FILE__}': user count> '#{User.count}'."
-        #   end
-        # end
-
-        # # specify do
-        # #   expect { delete user_path(admin) }.to change(User, :count).by(0)
-        # # end
-
-        # describe "should be able to delete another user" do
-
-        #   puts "\nDEBUG, manual, '#{__FILE__}': user count, prior> '#{User.count}'."
-
-        #   before { delete user_path(user) }
-        #   specify { expect { User.count }.to change(User, :count).by(-1) }
-
-        #   puts "\nDEBUG, manual, '#{__FILE__}': user count> '#{User.count}'."
-        # end
-
-        # it "should be able to delete another user" do
-
-        #   puts "\nDEBUG, manual, '#{__FILE__}': user count, prior> '#{User.count}'."
-
-        #   expect do
-        #     before { delete user_path(user) }
-        #     # click_link('delete', match: :first)
-        #   end.to change(User, :count).by(-1)
-
-        #   puts "\nDEBUG, manual, '#{__FILE__}': user count> '#{User.count}'."
-        # end
-
-        # before { 
-        #   puts "\nDEBUG, manual, '#{__FILE__}': user count, prior> '#{User.count}'."
-        #   delete user_path(user) 
-        #   puts "\nDEBUG, manual, '#{__FILE__}': user count> '#{User.count}'."
-        # }
-
-        
-        # it { should }.change(User, :count).by(0) }
-        # it "should NOT be able to delete an admin user" do
-        #   expect { delete user_path(admin) }.to change(User, :count).by(0)
-        # end
-
-        # describe "should NOT be able to delete an admin user" do
-        #   before { delete user_path(user) }
-        #   specify { expect(response).to redirect_to(root_url) }
-        # end
-
-        # it "should NOT be able to delete an admin user" do
-
-        #   expect do
-        #     delete user_path(admin)
-        #     # click_link('delete', match: :first)
-        #   end.to change(User, :count).by(0)
-
-        # end
-
       end
     end
 
   end
 
+  ##
   describe "profile page" do
     let(:user) { FactoryGirl.create(:user) }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
+
     before { visit user_path(user) }
 
     it { should have_content(user.name) }
     it { should have_title(user.name) }
+
+    describe "microposts" do
+      it { should have_content(m1.content) }
+      it { should have_content(m2.content) }
+      it { should have_content(user.microposts.count) }
+    end
   end
+
+  # describe "profile page" do
+  #   let(:user) { FactoryGirl.create(:user) }
+  #   before { visit user_path(user) }
+
+  #   it { should have_content(user.name) }
+  #   it { should have_title(user.name) }
+  # end
+
+  ## END ##
 
   describe "signup page" do
     before { visit signup_path }

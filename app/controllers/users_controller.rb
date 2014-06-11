@@ -12,10 +12,12 @@ class UsersController < ApplicationController
   end
   
   def new
+    redirect_to(root_url) if signed_in?
     @user = User.new
   end
 
   def create
+    redirect_to(root_url) if signed_in?
     @user = User.new(user_params)
     if @user.save
       sign_in @user
@@ -38,11 +40,24 @@ class UsersController < ApplicationController
     end
   end
 
+  ##
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User deleted."
+    user = User.find(params[:id])
+    if !current_user?(user)
+      user.destroy
+      flash[:success] = "User destroyed."
+    else
+      flash[:error] = "Cannot delete own admin account!"
+    end
     redirect_to users_url
   end
+
+  # Thing without protection.
+  # def destroy
+  #   User.find(params[:id]).destroy
+  #   flash[:success] = "User deleted."
+  #   redirect_to users_url
+  # end
 
   private
 

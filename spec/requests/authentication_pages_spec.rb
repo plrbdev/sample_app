@@ -9,6 +9,8 @@ describe "Authentication" do
 
     it { should have_content('Sign in') }
     it { should have_title('Sign in') }
+    it { should_not have_link('Profile') }
+    it { should_not have_link('Settings') }
   end
 
   describe "signin" do
@@ -49,15 +51,54 @@ describe "Authentication" do
 
   describe "authorization" do
 
+    ## The f*cking bullsh*t. ##
+    context "as an admin user" do
+      let(:admin) { FactoryGirl.create(:admin) }
+
+      before do
+        visit signin_path
+        sign_in(admin, no_capybara: true)
+      end
+
+      context "prevents admin users from destroying themselves" do
+        it "does not delete the user" do
+          expect do
+            delete user_path(admin)
+          end.not_to change(User, :count)
+        end
+
+        context "after failing to delete" do
+          let(:no_suicide) { "Cannot delete own admin account!" }
+
+          before { delete user_path(admin) }
+          specify do
+            response.should redirect_to(users_url),
+            flash[:error] = no_suicide
+          end
+        end
+      end
+    end
+
+    # # This works too.
+    # describe "as admin user" do
+    #   let(:admin) { FactoryGirl.create(:admin) }
+    #   before { sign_in(admin, no_capybara: true) }
+
+    #   it "should not be able to delete itself" do
+    #     expect { delete user_path(admin)  }.not_to change(User, :count) 
+    #   end
+    # end
+
+    ## END ##
+
+
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
 
       describe "when attempting to visit a protected page" do
         before do
           visit edit_user_path(user)
-          fill_in "Email",    with: user.email
-          fill_in "Password", with: user.password
-          click_button "Sign in"
+          sign_in user
         end
 
         describe "after signing in" do
@@ -65,6 +106,19 @@ describe "Authentication" do
           it "should render the desired protected page" do
             expect(page).to have_title('Edit user')
           end
+
+          describe "when signing in again" do
+            before do
+              click_link "Sign out"
+              visit signin_path
+              sign_in user
+            end
+
+            it "should render the default (profile) page" do
+              expect(page).to have_title(user.name)
+            end
+          end
+
         end
       end
 

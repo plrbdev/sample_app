@@ -44,4 +44,16 @@ describe "Micropost pages" do
     end
   end
 
+  ##
+  describe "micropost destruction" do
+    let(:other_user) { FactoryGirl.create(:user) }
+    before do 
+      FactoryGirl.create(:micropost, user: other_user)
+      visit user_path(other_user)
+    end
+
+    it { should_not have_link('delete') }
+
+  end
+
 end

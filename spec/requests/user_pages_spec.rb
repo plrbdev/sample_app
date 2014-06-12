@@ -69,6 +69,28 @@ describe "User pages" do
     end
   end
 
+  ## ... ##
+  describe "pagination" do
+
+    let(:user) { FactoryGirl.create(:user) }
+
+    before do
+      50.times { FactoryGirl.create(:micropost, user: user, content: Faker::Lorem.sentence(5)) }
+      visit user_path(user)
+    end
+    after(:all)  { User.delete_all }
+
+    it { should have_selector('div.pagination') }
+
+    it "should list each micropost" do
+      user.microposts.paginate(page: 1).each do |micropost|
+        expect(page).to have_selector('li', text: micropost.content)
+      end
+    end
+
+  end
+  ## END ##
+
   describe "signup page" do
     before { visit signup_path }
 

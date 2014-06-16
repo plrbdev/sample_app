@@ -40,14 +40,41 @@ describe "User pages" do
         end
 
         it { should have_link('delete', href: user_path(User.first)) }
+
         it "should be able to delete another user" do
           expect do
             click_link('delete', match: :first)
           end.to change(User, :count).by(-1)
         end
-        it { should_not have_link('delete', href: user_path(admin)) }
 
+        it { should_not have_link('delete', href: user_path(admin)) }
       end
+
+      ##
+      describe "admin user: other effects of deleting a user" do
+        let(:admin)         { FactoryGirl.create(:admin) }
+        let(:follower)      { FactoryGirl.create(:user) }
+        let(:followed_user) { FactoryGirl.create(:user) }
+        let(:delete_user)   { -> { click_link('delete', match: :first) } }
+
+        before do
+          sign_in admin
+          visit users_path
+          follower.follow!(User.first)
+          User.first.follow!(followed_user)
+        end
+
+        it "-1 followed users count" do
+          expect(delete_user).to change(follower.followed_users, :count).by(-1)
+        end
+
+        it "-1 followers count" do
+          expect(delete_user).to change(followed_user.followers, :count).by(-1)
+        end
+      end
+
+      ## END ##
+    
     end
 
   end
@@ -116,6 +143,18 @@ describe "User pages" do
           it { should have_xpath("//input[@value='Follow']") }
         end
       end
+
+      describe "follower/following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit root_path
+        end
+
+        it { should have_link("0 following", href: following_user_path(user)) }
+        it { should have_link("1 followers", href: followers_user_path(user)) }
+      end
+      
     end
 
   end
